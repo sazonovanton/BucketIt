@@ -1,0 +1,5 @@
+[S3]
+endpoint_url = https://storage.yandexcloud.net
+access_key = xxxxxxxxxxxxxxxxxxxxxxxxx
+secret_key = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+bucket_default = mybucket
