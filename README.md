@@ -31,7 +31,9 @@ If the configuration file does not exist or cannot be read, BucketIt will prompt
 ```
 usage: bucketit [-h] [--nodate] [-b BUCKET] [-v] file
 
-BucketIt is a simple tool to upload files to S3. Config file is required. See README for more details.
+BucketIt is a simple tool for uploading files to S3. 
+See README for more details.
+Github: https://github.com/sazonovanton/BucketIt
 
 positional arguments:
   file           Path to the file you want to upload

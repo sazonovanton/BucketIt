@@ -64,8 +64,9 @@ class BucketIt:
         Parse command line options. 
         '''
         # add description if help is called
-        parser = argparse.ArgumentParser(description='BucketIt is a simple tool to upload files to S3. Config file is required. See README for more details.',
-                                            epilog='Usage example: bucketit file.txt --bucket mybucket') 
+        parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
+                                            description='BucketIt is a simple tool for uploading files to S3. \nSee README for more details. \nGithub: https://github.com/sazonovanton/BucketIt',
+                                            epilog='Usage: bucketit file.txt --bucket mybucket') 
         parser.add_argument("file", help="Path to the file you want to upload", type=str)
         parser.add_argument('--nodate', action='store_true', help='Do not add date in a format of YYYY/MM/DD before the filename in bucket')
         parser.add_argument('-b', '--bucket', default=self.bucket_default, help='Bucket name to upload the file to. If not specified, the default bucket will be used')
