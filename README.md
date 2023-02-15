@@ -20,8 +20,8 @@ secret_key = <secret_key>
 bucket_default = <bucket_default>
 ```
 * `endpoint_url` - The endpoint URL for your S3 service.
-* `access_key` - Your AWS access key.
-* `secret_key` - Your AWS secret key.
+* `access_key` - Your S3 access key.
+* `secret_key` - Your S3 secret key.
 * `bucket_default` - (Optional) The default bucket to use for uploads. If not specified, you will be prompted for the bucket name when you run BucketIt.
 
 If the configuration file does not exist or cannot be read, BucketIt will prompt you to create a new configuration file.
