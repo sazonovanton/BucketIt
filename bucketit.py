@@ -2,6 +2,7 @@ import configparser
 import boto3
 from datetime import datetime
 import argparse
+import os
 
 
 class BucketIt:
@@ -32,6 +33,7 @@ class BucketIt:
         bucket_default = config.get("S3", "bucket_default") if config.has_option("S3", "bucket_default") else None
         return endpoint_url, access_key, secret_key, bucket_default
 
+
     def no_config(self, configpath):
         '''
         Create config from user input if config file does not exist or something went wrong with reading it.
@@ -56,8 +58,9 @@ class BucketIt:
                             'bucket_default': bucket_default}
         with open(configpath, 'w') as configfile:
             config.write(configfile)
-        print("\nConfig file created. Please run the script again.")
+        print("Config file created. Please run the script again.")
         exit()
+
 
     def parse_options(self):
         '''
@@ -66,41 +69,72 @@ class BucketIt:
         # add description if help is called
         parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
                                             description='BucketIt is a simple tool for uploading files to S3. \nSee README for more details. \nGithub: https://github.com/sazonovanton/BucketIt',
-                                            epilog='Usage: bucketit file.txt --bucket mybucket') 
+                                            epilog='Usage: bucketit file.txt --bucket mybucket --filename newname.txt') 
         parser.add_argument("file", help="Path to the file you want to upload", type=str)
-        parser.add_argument('--nodate', action='store_true', help='Do not add date in a format of YYYY/MM/DD before the filename in bucket')
+        parser.add_argument('--filename', default=None, help='Filename to use in the bucket. If not specified, the original filename will be used') 
+        parser.add_argument('--date', action='store_true', help='Add date in a format of YYYY/MM/DD before the filename in bucket')
+        parser.add_argument('--folder', default=None, help='Folder to upload the file to. If not specified, the file will be uploaded to the root of the bucket')
+        parser.add_argument('-r', '--recursive', action='store_true', help='Upload all files in the directory recursively')
         parser.add_argument('-b', '--bucket', default=self.bucket_default, help='Bucket name to upload the file to. If not specified, the default bucket will be used')
         parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')    
+        parser.add_argument('--version', action='version', version='%(prog)s 1.0', help='Tool version')
+        parser.add_argument('--nofolder', action='store_true', help='Do not create a folder with the same name as the folder with files if recursive is set')
         args = parser.parse_args()
+
         return args
 
-    def upload(self, args):
+
+    def upload(self, args, filepath):
         '''
         Main function. Uploads the file to the bucket. 
         '''
-        filepath = args.file
-        nodate = args.nodate
+        # get the arguments
         bucket = args.bucket
         verbose = args.verbose
+        date = args.date
+        filename = args.filename
+        folder = args.folder
 
-        if bucket is None:
-            print("Please specify the bucket name or set the default bucket in the config file")
-            return
+        filename = filepath.split('/')[-1] if filename is None else filename # if filename is not specified, use the original filename
+        now = datetime.now().strftime('%Y/%m/%d/') if date else '' # if date is set, add date in a format of YYYY/MM/DD before the filename
+        folder = '' if folder is None else folder + '/' # if folder is not specified, upload to the root of the bucket
+        folder_name = args.file.split('/')[-1] + '/' if args.recursive and not args.nofolder else '' # if recursive is set, create a folder with the same name as the folder with files
+        
+        s3path = folder + now + folder_name + filename # full path to the file in the bucket
 
-        filename = filepath.split('/')[-1]
-        now = datetime.now().strftime('%Y/%m/%d/') if not nodate else ''
-        s3path = now + filename
-
-        self.s3.upload_file(filepath, bucket, s3path)
+        self.s3.upload_file(filepath, bucket, s3path) 
         
         if verbose:
-            print("File {} uploaded to bucket '{}' as {}".format(filepath, bucket, s3path))
+            print("File {} uploaded to bucket '{}' as {}".format(filepath, bucket, s3path)) # print the result if verbose is set
+
+        return True
+
+
+    def main(self, args):
+        '''
+        Main function. Uploads the file to the bucket. 
+        '''
+        if args.bucket is None:
+            print("Please specify the bucket name or set the default bucket in the config file")
+            return False
+
+        # if recursive is set, upload all files in the directory, otherwise upload the file
+        if args.recursive:
+            if args.filename is not None:
+                print("You cannot specify filename when using --recursive")
+                exit()
+            for filename in os.listdir(args.file):
+                self.upload(args, args.file + '/' + filename)
+        else:
+            self.upload(args, args.file)
+
+        return True
 
 
 if __name__ == "__main__":
     try:
-        b = BucketIt()
-        args = b.parse_options()
-        b.upload(args)
+        b = BucketIt() 
+        args = b.parse_options() # parse command line options
+        b.main(args) # upload the file
     except Exception as e:
-        print("Something went wrong: {}".format(e))
+        print("Something went wrong: {}".format(e)) # print error message if something went wrong

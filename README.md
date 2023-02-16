@@ -25,6 +25,7 @@ bucket_default = <bucket_default>
 * `bucket_default` - (Optional) The default bucket to use for uploads. If not specified, you will be prompted for the bucket name when you run BucketIt.
 
 If the configuration file does not exist or cannot be read, BucketIt will prompt you to create a new configuration file.
+WARNING: Access key and secret key stored in configuration file as a plain text.
 
 ## Usage
 
