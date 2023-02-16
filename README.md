@@ -1,6 +1,6 @@
 # BucketIt
 
-BucketIt is a simple command line interface (CLI) tool for uploading files to an S3 bucket. It can be used for uploading a single file, multiple files in a directory, or all files in a directory recursively.
+BucketIt is a command line interface (CLI) tool that simplifies uploading files to S3 bucket. It can be used for uploading a single file, multiple files in a directory, or all files in a directory recursively.
 
 ## Prerequisites
 
