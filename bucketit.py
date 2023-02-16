@@ -68,8 +68,8 @@ class BucketIt:
         '''
         # add description if help is called
         parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
-                                            description='BucketIt is a simple tool for uploading files to S3. \nSee README for more details. \nGithub: https://github.com/sazonovanton/BucketIt',
-                                            epilog='Usage: bucketit file.txt --bucket mybucket --filename newname.txt') 
+                                            description='BucketIt is a simple tool for uploading files to S3. \nSee README for more details.',
+                                            epilog='Github: https://github.com/sazonovanton/BucketIt') 
         parser.add_argument("file", help="Path to the file you want to upload", type=str)
         parser.add_argument('--filename', default=None, help='Filename to use in the bucket. If not specified, the original filename will be used') 
         parser.add_argument('--date', action='store_true', help='Add date in a format of YYYY/MM/DD before the filename in bucket')

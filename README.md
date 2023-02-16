@@ -1,11 +1,28 @@
 # BucketIt
 
-BucketIt is a simple command line interface (CLI) tool for uploading files to an S3 bucket. This tool uses the [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to communicate with S3.
-Installation
+BucketIt is a simple command line interface (CLI) tool for uploading files to an S3 bucket. It can be used for uploading a single file, multiple files in a directory, or all files in a directory recursively.
 
-To install the dependencies for BucketIt, run the following command:
+## Prerequisites
+
+* Python 3
+* [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
+* An S3 account with credentials
+
+## Installation
+
+Clone the repository:
 ```
-pip install -r requirements.txt
+git clone https://github.com/sazonovanton/BucketIt.git
+```
+
+To install the dependencies for BucketIt, run the following command from the BucketIt directory:
+```
+pip3 install -r requirements.txt
+```
+
+Create a .config file in the root directory. You can copy the config.example file and fill in the values, or run the script once to create the file interactively.
+```
+cp config.example .config
 ```
 
 ## Configuration
@@ -30,33 +47,49 @@ WARNING: Access key and secret key stored in configuration file as a plain text.
 ## Usage
 
 ```
-usage: bucketit [-h] [--nodate] [-b BUCKET] [-v] file
+usage: bucketit.py [-h] [--filename FILENAME] [--date] [--folder FOLDER] [-r] [-b BUCKET] [-v] [--version] [--nofolder] file
 
 BucketIt is a simple tool for uploading files to S3. 
 See README for more details.
-Github: https://github.com/sazonovanton/BucketIt
 
 positional arguments:
-  file           Path to the file you want to upload
+  file                  Path to the file you want to upload
 
 optional arguments:
-  -h, --help     show this help message and exit
-  --nodate       Do not add date in a format of YYYY/MM/DD before the filename in bucket
-  -b BUCKET      Bucket name to upload the file to. If not specified, the default bucket will be used
-  -v, --verbose  Verbose output
+  -h, --help            show this help message and exit
+  --filename FILENAME   Filename to use in the bucket. If not specified, the original filename will be used
+  --date                Add date in a format of YYYY/MM/DD before the filename in bucket
+  --folder FOLDER       Folder to upload the file to. If not specified, the file will be uploaded to the root of the bucket
+  -r, --recursive       Upload all files in the directory recursively
+  -b BUCKET, --bucket BUCKET
+                        Bucket name to upload the file to. If not specified, the default bucket will be used
+  -v, --verbose         Verbose output
+  --version             Tool version
+  --nofolder            Do not create a folder with the same name as the folder with files if recursive is set
 ```
 
 To upload a file to an S3 bucket, run the following command:
 ```
-bucketit <file> --bucket <bucket>
+python3 bucketit.py path/to/file
 ```
-* `<file>` - The path to the file you want to upload.<br>
-* `<bucket>` - The name of the S3 bucket you want to upload the file to.
-
+You can specify the following options:
+* `--filename` - Filename to use in the bucket. If not specified, the original filename will be used.
+* `--date` - Add date in a format of YYYY/MM/DD before the filename in bucket.
+* `--folder` - Folder to upload the file to. If not specified, the file will be uploaded to the root of the bucket.
+* `-r` or `--recursive` - Upload all files in the directory recursively.
+* `--nofolder` - Do not create a folder with the same name as the folder with files if recursive is set.
+* `-b` or `--bucket` - Bucket name to upload the file to. If not specified, the default bucket will be used.
+* `-v` or `--verbose` - Verbose output.
 
 By default, the file will be uploaded to the default bucket specified in the configuration file. If no default bucket is specified, you will be prompted for the bucket name when you run BucketIt.
 
-You can also use the `--nodate` option to disable adding the current date to the filename in the bucket. This can be useful if you want to overwrite an existing file with the same name.
+You can also use the `--date` option to enable adding the current date to the filename in the bucket. This is useful if you want to keep a history of your files. For example, if you run the following command:
+```
+python3 bucketit.py path/to/file --date
+```
+The file will be uploaded to the bucket with the following filename:
+```
+2020/01/01/file
+```
 
-
-_Thanks to [ChatGPT](https://chat.openai.com/chat/) for helping with this description :)_
+<br>_Thanks to [ChatGPT](https://chat.openai.com/chat/) for helping with this description :)_
