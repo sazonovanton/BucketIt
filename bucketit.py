@@ -10,10 +10,11 @@ class BucketIt:
         '''
         Initialize the class. 
         '''
-        try:
-            self.endpoint_url, self.access_key, self.secret_key, self.bucket_default = self.get_config(configpath)
-        except:
-            self.no_config(configpath)
+        # check if config file exists
+        if not os.path.isfile(configpath):
+            self.no_config(configpath) # if not, create it
+            
+        self.endpoint_url, self.access_key, self.secret_key, self.bucket_default = self.get_config(configpath) # get config from the file
         
         self.s3 = boto3.client('s3',
                   endpoint_url=self.endpoint_url,
@@ -58,6 +59,17 @@ class BucketIt:
                             'bucket_default': bucket_default}
         with open(configpath, 'w') as configfile:
             config.write(configfile)
+
+        # try to connect to S3
+        try:
+            s3 = boto3.client('s3',
+                  endpoint_url=endpoint_url,
+                  aws_access_key_id=access_key,
+                  aws_secret_access_key=secret_key)
+        except:
+            print("Something went wrong while trying to connect. Please check your credentials and try again.")
+            exit()
+
         print("Config file created. Please run the script again.")
         exit()
 
