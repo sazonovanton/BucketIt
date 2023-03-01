@@ -15,7 +15,7 @@ Through PyPI:
 pip3 install bucketit
 ```
 
-You can create a .bucketit_config file by running script once or copying and changing the bucketit_config.example file to your home directory (`C:\Users\username` on Windows, `/home/username` on Linux). 
+You can create a `.bucketit_config` file by running script once or creating it in your home directory (`C:\Users\username\.bucketit_config` on Windows, `/home/username/.bucketit_config` on Linux) using `bucketit_config.example` file. 
 
 **IMPORTANT**: Access key and secret key stored in configuration file in your home directory as a plain text. I plan to change config storage to environment variables or some other secure way in the future.
 
