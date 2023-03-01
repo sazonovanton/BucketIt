@@ -15,21 +15,9 @@ Through PyPI:
 pip3 install bucketit
 ```
 
-Alternatively, you can clone the repository and install the dependencies manually.
-
-Clone the repository:
-```
-git clone https://github.com/sazonovanton/BucketIt.git
-```
-
-To install the dependencies for BucketIt, run the following command from the BucketIt directory:
-```
-pip3 install -r requirements.txt
-```
-
 You can create a .bucketit_config file by running script once or copying and changing the bucketit_config.example file to your home directory (`C:\Users\username` on Windows, `/home/username` on Linux). 
 
-IMPORTANT: Access key and secret key stored in configuration file as a plain text. I plan to change config storage to environment variables or some other secure way in the future.
+**IMPORTANT**: Access key and secret key stored in configuration file in your home directory as a plain text. I plan to change config storage to environment variables or some other secure way in the future.
 
 ## Configuration
 
@@ -48,7 +36,7 @@ bucket_default = <bucket_default>
 * `bucket_default` - (Optional) The default bucket to use for uploads. If not specified, you will be prompted for the bucket name when you run BucketIt.
 
 If the configuration file does not exist or cannot be read, BucketIt will prompt you to create a new configuration file.
-WARNING: Access key and secret key stored in configuration file as a plain text.
+*WARNING: Access key and secret key stored in configuration file as a plain text.*
 
 ## Usage
 
@@ -91,7 +79,7 @@ By default, the file will be uploaded to the default bucket specified in the con
 
 You can also use the `--date` option to enable adding the current date to the filename in the bucket. This is useful if you want to keep a history of your files. For example, if you run the following command:
 ```
-python3 bucketit.py path/to/file --date
+bucketit path/to/file --date
 ```
 The file will be uploaded to the bucket with the following filename:
 ```
