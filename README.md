@@ -10,6 +10,13 @@ BucketIt is a command line interface (CLI) tool that simplifies uploading files 
 
 ## Installation
 
+Through PyPI:
+```
+pip3 install bucketit
+```
+
+Alternatively, you can clone the repository and install the dependencies manually.
+
 Clone the repository:
 ```
 git clone https://github.com/sazonovanton/BucketIt.git
@@ -20,10 +27,11 @@ To install the dependencies for BucketIt, run the following command from the Buc
 pip3 install -r requirements.txt
 ```
 
-Create a .config file in the root directory. You can copy the config.example file and fill in the values, or run the script once to create the file interactively.
+You can create a .config file by running script once or copying and changing the config.example file in BucketIt directory:
 ```
 cp config.example .config
 ```
+IMPORTANT: Make sure that the .config file is not readable by other users. Otherwise, your S3 credentials can be exposed.
 
 ## Configuration
 
@@ -47,7 +55,7 @@ WARNING: Access key and secret key stored in configuration file as a plain text.
 ## Usage
 
 ```
-usage: bucketit.py [-h] [--filename FILENAME] [--date] [--folder FOLDER] [-r] [-b BUCKET] [-v] [--version] [--nofolder] file
+usage: bucketit [-h] [--filename FILENAME] [--date] [--folder FOLDER] [-r] [-b BUCKET] [-v] [--version] [--nofolder] file
 
 BucketIt is a simple tool for uploading files to S3. 
 See README for more details.
@@ -70,7 +78,7 @@ optional arguments:
 
 To upload a file to an S3 bucket, run the following command:
 ```
-python3 bucketit.py path/to/file
+bucketit path/to/file
 ```
 You can specify the following options:
 * `--filename` - Filename to use in the bucket. If not specified, the original filename will be used.
@@ -92,4 +100,3 @@ The file will be uploaded to the bucket with the following filename:
 2020/01/01/file
 ```
 
-<br>_Thanks to [ChatGPT](https://chat.openai.com/chat/) for helping with this description :)_
