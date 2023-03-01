@@ -94,7 +94,7 @@ class BucketIt:
         parser.add_argument('-r', '--recursive', action='store_true', help='Upload all files in the directory recursively')
         parser.add_argument('-b', '--bucket', default=self.bucket_default, help='Bucket name to upload the file to. If not specified, the default bucket will be used')
         parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')    
-        parser.add_argument('--version', action='version', version='%(prog)s 0.4', help='Tool version')
+        parser.add_argument('--version', action='version', version='%(prog)s 0.5', help='Tool version')
         parser.add_argument('--nofolder', action='store_true', help='Do not create a folder with the same name as the folder with files if recursive is set')
         args = parser.parse_args()
 
