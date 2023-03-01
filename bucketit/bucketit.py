@@ -9,11 +9,13 @@ import logging
 
 
 class BucketIt:
-    def __init__(self, configpath='.config'):
+    def __init__(self):
         '''
         Initialize the class. 
         '''
         # check if config file exists
+        homepath = os.path.expanduser("~")
+        configpath = os.path.join(f"{homepath}/.bucketit_config")
         if not os.path.isfile(configpath):
             self.no_config(configpath) # if not, create it
             
@@ -92,7 +94,7 @@ class BucketIt:
         parser.add_argument('-r', '--recursive', action='store_true', help='Upload all files in the directory recursively')
         parser.add_argument('-b', '--bucket', default=self.bucket_default, help='Bucket name to upload the file to. If not specified, the default bucket will be used')
         parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')    
-        parser.add_argument('--version', action='version', version='%(prog)s 0.1', help='Tool version')
+        parser.add_argument('--version', action='version', version='%(prog)s 0.4', help='Tool version')
         parser.add_argument('--nofolder', action='store_true', help='Do not create a folder with the same name as the folder with files if recursive is set')
         args = parser.parse_args()
 
@@ -154,9 +156,4 @@ def cli():
         print("Something went wrong: {}".format(e)) # print error message if something went wrong
 
 if __name__ == "__main__":
-    try:
-        b = BucketIt() 
-        args = b.parse_options() # parse command line options
-        b.main(args) # upload the file
-    except Exception as e:
-        print("Something went wrong: {}".format(e)) # print error message if something went wrong
+    cli()

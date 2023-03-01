@@ -27,11 +27,9 @@ To install the dependencies for BucketIt, run the following command from the Buc
 pip3 install -r requirements.txt
 ```
 
-You can create a .config file by running script once or copying and changing the config.example file in BucketIt directory:
-```
-cp config.example .config
-```
-IMPORTANT: Make sure that the .config file is not readable by other users. Otherwise, your S3 credentials can be exposed.
+You can create a .bucketit_config file by running script once or copying and changing the bucketit_config.example file to your home directory (`C:\Users\username` on Windows, `/home/username` on Linux). 
+
+IMPORTANT: Access key and secret key stored in configuration file as a plain text. I plan to change config storage to environment variables or some other secure way in the future.
 
 ## Configuration
 
