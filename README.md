@@ -74,6 +74,7 @@ You can specify the following options:
 * `--nofolder` - Do not create a folder with the same name as the folder with files if recursive is set.
 * `-b` or `--bucket` - Bucket name to upload the file to. If not specified, the default bucket will be used.
 * `-v` or `--verbose` - Verbose output.
+* `-s` or `--silent` - Silent - no output.
 
 By default, the file will be uploaded to the default bucket specified in the configuration file. If no default bucket is specified, you will be prompted for the bucket name when you run BucketIt.
 
@@ -85,4 +86,5 @@ The file will be uploaded to the bucket with the following filename:
 ```
 2020/01/01/file
 ```
+Also progress bar will be shown during upload. Verbose output will have more information about the upload process (speed, upload time, destination). Silent output will have no output at all.
 

@@ -6,6 +6,8 @@ from datetime import datetime
 import argparse
 import os
 import logging
+import time
+import sys
 
 
 class BucketIt:
@@ -93,8 +95,9 @@ class BucketIt:
         parser.add_argument('--folder', default=None, help='Folder to upload the file to. If not specified, the file will be uploaded to the root of the bucket')
         parser.add_argument('-r', '--recursive', action='store_true', help='Upload all files in the directory recursively')
         parser.add_argument('-b', '--bucket', default=self.bucket_default, help='Bucket name to upload the file to. If not specified, the default bucket will be used')
-        parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')    
-        parser.add_argument('--version', action='version', version='%(prog)s 0.5', help='Tool version')
+        parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')  
+        parser.add_argument('-s', '--silent', action='store_true', help='No output')  
+        parser.add_argument('--version', action='version', version='%(prog)s 0.6', help='Tool version')
         parser.add_argument('--nofolder', action='store_true', help='Do not create a folder with the same name as the folder with files if recursive is set')
         args = parser.parse_args()
 
@@ -108,6 +111,7 @@ class BucketIt:
         # get the arguments
         bucket = args.bucket
         verbose = args.verbose
+        silent = args.silent
         date = args.date
         filename = args.filename
         folder = args.folder
@@ -119,11 +123,49 @@ class BucketIt:
         
         s3path = folder + now + folder_name + filename # full path to the file in the bucket
 
-        self.s3.upload_file(filepath, bucket, s3path) 
+        if verbose:
+            print("Uploading file {} to bucket '{}' as {}".format(filepath, bucket, s3path))
+            start_time = time.time()
+        elif silent:
+            pass
+        else:
+            print("Uploading file {}".format(filepath))
+        
+        if silent:
+            self.s3.upload_file(filepath, bucket, s3path) 
+        else:
+            self.upload_animated(filepath, bucket, s3path, verbose) # upload the file with a progress bar
         
         if verbose:
-            print("File {} uploaded to bucket '{}' as {}".format(filepath, bucket, s3path)) # print the result if verbose is set
+            print("File {} uploaded to bucket '{}' as {} in {} seconds".format(filepath, bucket, s3path, round(time.time() - start_time))) # print the time it took to upload the file
 
+        return True
+
+    def upload_animated(self, filepath, bucket, s3path, verbose=False):
+        '''
+        Uploads the file to the bucket with a progress bar.
+        '''
+        # file size in bytes
+        filesize = os.path.getsize(filepath)
+        downloaded = 0
+        if verbose:
+            start = time.time() # start the timer
+        
+        def upload_progress(chunk):
+            '''
+            Callback function for the progress bar.
+            '''
+            nonlocal downloaded, filesize, start, verbose
+            downloaded += chunk
+            done = int(50 * downloaded / filesize)
+            if verbose:
+                sys.stdout.write("\r[%s%s] %s Mb / %s Mb (%s Mbit/s)" % ('=' * done, ' ' * (50-done), round(downloaded/1024/1024, 1), round(filesize/1024/1024, 1), round(downloaded/1024/1024/(time.time() - start)*8, 1)))
+            else:
+                sys.stdout.write("\r[%s%s] %s Mb / %s Mb" % ('=' * done, ' ' * (50-done), round(downloaded/1024/1024, 1), round(filesize/1024/1024, 1)))
+            sys.stdout.flush()
+
+        self.s3.upload_file(filepath, bucket, s3path, Callback=upload_progress) # upload the file with a progress bar
+        print('')
         return True
 
 

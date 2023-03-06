@@ -137,4 +137,4 @@ cython_debug/
 
 # Project specific
 .config
-setup.py
+*.bin
